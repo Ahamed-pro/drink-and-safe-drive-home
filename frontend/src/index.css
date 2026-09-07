@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.si {
+  font-family: "Noto Sans Sinhala", "Inter", sans-serif;
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-porch-amber;
+}
+
+.section-pad {
+  @apply px-6 py-20 sm:px-10 lg:px-16;
+}
+
+.container-max {
+  @apply mx-auto w-full max-w-6xl;
+}
+
+.btn-amber {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-porch-amber px-6 py-3 font-display text-sm font-bold text-night-route-deep shadow-glow transition hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-porch-amber;
+}
+
+.btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/5 px-6 py-3 font-display text-sm font-bold text-warm-paper transition hover:border-white/50 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white;
+}
+
+.btn-whatsapp {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-whatsapp-green px-6 py-3 font-display text-sm font-bold text-white shadow-card transition hover:-translate-y-0.5 hover:brightness-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whatsapp-green;
+}
+
+.card {
+  @apply rounded-3xl border border-black/5 bg-white p-6 shadow-card;
+}
+
+.input {
+  @apply w-full rounded-xl border border-black/10 bg-warm-paper px-4 py-2.5 text-sm text-night-route outline-none transition focus:border-porch-amber focus:ring-2 focus:ring-porch-amber/30;
+}
+
+.dotted-route {
+  stroke-dasharray: 2 14;
+  stroke-linecap: round;
+}

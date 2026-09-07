@@ -1,0 +1,26 @@
+rules_version = '2';
+
+// Driver and vehicle photos need to be publicly viewable (customers see
+// them on the Track Booking page, without logging in), but only an admin
+// account may upload or replace them. This checks the same /admins/{uid}
+// Firestore collection the Firestore rules use, via the cross-service
+// firestore.exists() call.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null &&
+        firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid));
+    }
+
+    match /drivers/{driverId}/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Deny everything else by default.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

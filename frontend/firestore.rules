@@ -1,0 +1,71 @@
+rules_version = '2';
+
+// Security model:
+// - Anyone (no login) can CREATE a booking, but cannot read/update/delete
+//   bookings — that keeps customer data private from other customers.
+// - Only signed-in accounts with a matching document in /admins/{uid} may
+//   read or manage bookings, drivers, or pricing/settings.
+// - Nobody but an admin may write to /admins — create the first admin
+//   document from the Firebase console (or Admin SDK) after creating the
+//   Auth user, not from the client.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /admins/{adminId} {
+      allow read: if isAdmin();
+      allow write: if false; // manage via Firebase console / Admin SDK only
+    }
+
+    match /bookings/{bookingId} {
+      allow create: if request.resource.data.keys().hasAll(
+        ['fullName', 'phone', 'pickup', 'destination', 'date', 'time', 'vehicleType']
+      );
+      // Anyone who has the exact (unguessable, auto-generated) booking id can
+      // look up that single booking's status — this powers the customer
+      // "track your booking" link. Listing/browsing all bookings still
+      // requires admin.
+      allow get: if true;
+      allow list: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /drivers/{driverId} {
+      // A driver's public profile (name, photo, vehicle) needs to be visible
+      // to the customer once assigned to their booking, via a direct get —
+      // but browsing/listing the full driver roster is still admin-only.
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true; // pricing must be publicly readable for the Pricing page
+      allow write: if isAdmin();
+    }
+
+    match /feedback/{feedbackId} {
+      // Anyone (no account) can submit feedback — same trust level as
+      // creating a booking — but customers can never read feedback back,
+      // including their own, so one customer can't browse another's
+      // reviews. Only admins can read, update (status), or delete.
+      allow create: if
+        request.resource.data.customerName is string &&
+        request.resource.data.customerName.size() > 0 &&
+        request.resource.data.customerName.size() <= 200 &&
+        request.resource.data.rating is int &&
+        request.resource.data.rating >= 1 &&
+        request.resource.data.rating <= 5 &&
+        request.resource.data.status == 'new' &&
+        request.resource.data.createdAt == request.time &&
+        (!('message' in request.resource.data) || (request.resource.data.message is string && request.resource.data.message.size() <= 1000)) &&
+        (!('bookingId' in request.resource.data) || (request.resource.data.bookingId is string && request.resource.data.bookingId.size() <= 200)) &&
+        (!('driverName' in request.resource.data) || (request.resource.data.driverName is string && request.resource.data.driverName.size() <= 200));
+      allow get, list, update, delete: if isAdmin();
+    }
+  }
+}

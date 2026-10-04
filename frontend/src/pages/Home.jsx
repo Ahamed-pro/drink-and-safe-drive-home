@@ -2,32 +2,9 @@ import { Link } from "react-router-dom";
 import RouteSignature from "../components/RouteSignature.jsx";
 import SafetyCard from "../components/SafetyCard.jsx";
 import BookingForm from "../components/BookingForm.jsx";
-import { PHONE_DISPLAY, PHONE_TEL, whatsappLink } from "../lib/constants.js";
+import { PHONE_DISPLAY, PHONE_TEL, whatsappLink, LOCATION_URL, LOCATION_EMBED_URL } from "../lib/constants.js";
 
-const trustPoints = [
-  {
-    title: "Vetted professional drivers",
-    si: "පරීක්ෂා කරන ලද වෘත්තීය රියදුරන්",
-    body: "Every driver is verified and trained before they're assigned to a booking.",
-  },
-  {
-    title: "Your car, your comfort",
-    si: "ඔබේ වාහනයම, ඔබේ සුවපහසුව",
-    body: "We never send a vehicle — a driver comes to you and drives your own car home.",
-  },
-  {
-    title: "No account needed",
-    si: "ගිණුමක් අවශ්‍ය නැත",
-    body: "Call, WhatsApp, or fill the form. Booking takes under a minute.",
-  },
-];
-
-const steps = [
-  { title: "Request a driver", si: "රියදුරෙකු ඉල්ලන්න", body: "Call, WhatsApp, or use the booking form with your pickup details." },
-  { title: "We confirm & assign", si: "අප තහවුරු කර පවරයි", body: "A vetted driver is assigned and you get a confirmation call." },
-  { title: "Driver arrives", si: "රියදුරු පැමිණේ", body: "Your driver meets you at the pickup point, on time." },
-  { title: "Ride home, safely", si: "ආරක්ෂිතව නිවසට", body: "Your driver takes your own vehicle — and you — home safely." },
-];
+// ... keep your trustPoints and steps same ...
 
 export default function Home() {
   return (
@@ -63,6 +40,9 @@ export default function Home() {
               <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-whatsapp">
                 WhatsApp Us
               </a>
+              <a href={LOCATION_URL} target="_blank" rel="noreferrer" className="btn-amber">
+                📍 Our Location
+              </a>
             </div>
           </div>
           <RouteSignature className="w-full drop-shadow-2xl" />
@@ -71,6 +51,7 @@ export default function Home() {
 
       {/* Trust */}
       <section className="section-pad bg-warm-paper">
+        {/* ... your existing trust code ... keep as is ... */}
         <div className="container-max">
           <div className="eyebrow text-harbor-teal">
             <span className="h-1.5 w-1.5 rounded-full bg-harbor-teal" /> Why trust us
@@ -132,6 +113,43 @@ export default function Home() {
           </div>
           <div className="card">
             <BookingForm />
+          </div>
+        </div>
+      </section>
+
+      {/* NEW LOCATION SECTION */}
+      <section className="section-pad bg-warm-paper pt-0">
+        <div className="container-max">
+          <div className="card overflow-hidden p-0">
+            <div className="grid lg:grid-cols-2">
+              <div className="p-8">
+                <div className="eyebrow text-harbor-teal">
+                  <span className="h-1.5 w-1.5 rounded-full bg-harbor-teal" /> Find us
+                </div>
+                <h2 className="mt-3 font-display text-2xl font-extrabold text-night-route">Our Location</h2>
+                <p className="mt-3 text-dusk-slate">
+                  Click below to open in Google Maps and get directions.
+                </p>
+                <a
+                  href={LOCATION_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-amber mt-6 inline-flex"
+                >
+                  Open in Google Maps
+                </a>
+              </div>
+              <iframe
+                src={LOCATION_EMBED_URL}
+                width="100%"
+                height="350"
+                style={{ border: 0 }}
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Our Location"
+              ></iframe>
+            </div>
           </div>
         </div>
       </section>

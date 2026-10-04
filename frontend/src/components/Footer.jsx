@@ -41,7 +41,7 @@ export default function Footer() {
                 WhatsApp {PHONE_DISPLAY}
               </a>
             </li>
-            <li>Negombo &amp; surrounding areas, Sri Lanka</li>
+            <li>Narahenpita &amp; surrounding areas, Sri Lanka</li>
           </ul>
         </div>
 

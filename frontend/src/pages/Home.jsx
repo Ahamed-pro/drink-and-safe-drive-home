@@ -4,6 +4,9 @@ import SafetyCard from "../components/SafetyCard.jsx";
 import BookingForm from "../components/BookingForm.jsx";
 import { PHONE_DISPLAY, PHONE_TEL, whatsappLink } from "../lib/constants.js";
 
+const LOCATION_URL =
+  "https://www.google.com/maps/place/6%C2%B053'22.3%22N+79%C2%B052'21.0%22E/@6.8895287,79.8699262,17z/data=!3m1!4b1!4m4!3m3!8m2!3d6.8895287!4d79.8725011?hl=en&entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D";
+
 const trustPoints = [
   {
     title: "Vetted professional drivers",
@@ -30,6 +33,10 @@ const steps = [
 ];
 
 export default function Home() {
+  function openLocation() {
+    window.open(LOCATION_URL, "_blank", "noopener,noreferrer");
+  }
+
   return (
     <div>
       {/* Hero */}
@@ -63,6 +70,9 @@ export default function Home() {
               <a href={whatsappLink()} target="_blank" rel="noreferrer" className="btn-whatsapp">
                 WhatsApp Us
               </a>
+              <button type="button" onClick={openLocation} className="btn-ghost">
+                Our Location
+              </button>
             </div>
           </div>
           <RouteSignature className="w-full drop-shadow-2xl" />

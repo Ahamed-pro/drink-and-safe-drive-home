@@ -59,19 +59,28 @@ export default function Feedback() {
 
     setStatus("submitting");
     try {
-      await addDoc(collection(db, "feedback"), {
+      // Optional fields are only included when filled in. (Sending null would
+      // be rejected by the Firestore rule, which expects a string if present.)
+      const data = {
         customerName: customerName.trim(),
-        bookingId: bookingId.trim() || null,
-        driverName: driverName.trim() || null,
         rating,
         message: message.trim().slice(0, MESSAGE_MAX_LENGTH),
         status: "new",
         createdAt: serverTimestamp(),
-      });
+      };
+      if (bookingId.trim()) data.bookingId = bookingId.trim();
+      if (driverName.trim()) data.driverName = driverName.trim();
+
+      await addDoc(collection(db, "feedback"), data);
       rememberSubmittedForBooking(bookingId.trim());
       setStatus("success");
     } catch (err) {
       console.error(err);
+      setError(
+        err?.code === "permission-denied"
+          ? "We couldn't save your feedback (permission denied). Please try again later or contact us."
+          : "Something went wrong while saving your feedback — please check your connection and try again."
+      );
       setStatus("error");
     }
   }
@@ -186,11 +195,6 @@ export default function Feedback() {
               {status === "submitting" ? "Submitting…" : "Submit Feedback"}
             </button>
 
-            {status === "error" && (
-              <p className="text-sm text-signal-coral">
-                Something went wrong — please try again.
-              </p>
-            )}
           </form>
         </div>
       </section>
